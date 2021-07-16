@@ -1,0 +1,64 @@
+###############################################################
+#                   Authelia configuration                    #
+###############################################################
+
+host: 0.0.0.0
+port: 9091
+log_level: info
+jwt_secret: JWT_SECRET_CHANGE_ME
+default_redirection_url: https://deny.example.com
+totp:
+  issuer: example.com
+  period: 30
+
+authentication_backend:
+  disable_reset_password: true
+  file:
+    path: /config/users_database.yml
+
+access_control:
+  default_policy: deny
+  rules:
+    - domain: first.example.com
+      policy: one_factor
+    - domain: second.example.com
+      policy: two_factor
+
+session:
+  name: authelia_session
+  secret: unsecure_session_secret
+  expiration: 3600 # 1 hour
+  inactivity: 300 # 5 minutes
+  domain: example.com # Should match whatever your root protected domain is
+
+regulation:
+  max_retries: 3
+  find_time: 120
+  ban_time: 300
+
+storage:
+  local:
+    path: /config/db.sqlite3
+
+notifier:
+  disable_startup_check: false
+  smtp:
+    host: smtp.example.com
+    port: 25
+    sender: no_reply@example.com
+    # HELO/EHLO Identifier. Some SMTP Servers may reject the default of localhost.
+    identifier: example.com
+    # Subject configuration of the emails sent.
+    # {title} is replaced by the text from the notifier
+    subject: "[Authelia] {title}"
+    # This address is used during the startup check to verify the email configuration is correct. It's not important what it is except if your email server only allows local delivery.
+    startup_check_address: test@example.com
+    disable_require_tls: false
+    disable_html_emails: false
+    tls:
+      # Server Name for certificate validation (in case you are using the IP or non-FQDN in the host option).
+      # server_name: smtp.example.com
+      # Skip verifying the server certificate (to allow a self-signed certificate).
+      skip_verify: true
+      # Minimum TLS version for either StartTLS or SMTPS.
+      minimum_version: TLS1.2

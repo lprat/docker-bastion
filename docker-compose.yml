@@ -1,0 +1,137 @@
+version: '2.1'
+services:
+  guacd:
+    image: lprat/guacd:latest
+    container_name: guacd
+    restart: always    
+    volumes:
+      - ./guac-record:/record
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 4822 || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    #mem_reservation: '512m'
+    #memswap_limit: '1g'
+    #mem_limit: '1g'
+    #cpuset: '1'
+    logging:
+      driver: "syslog"
+      options:
+        syslog-address: "tcp://172.17.0.1:514"
+        tag: "docker_bastion_guacd_{{.ImageName}}_{{.Name}}"
+  guacamole:
+    image: lprat/guacamole-client:latest
+    container_name: guacamole
+    restart: always
+    environment:
+      - POSTGRES_USER=guacamole
+      - POSTGRES_PASSWORD=guacamole
+      - POSTGRES_HOSTNAME=postgres
+      - POSTGRES_DATABASE=guacamole_db
+      - TOTP_ISSUER="bastion guac"
+      - TOTP_ENABLED=true
+      - GUACD_HOSTNAME=guacd
+    ports:
+      - 8080:8080
+    links:
+      - guacd
+      - postgres
+      - chrome
+    depends_on:
+      guacd:
+        condition: service_healthy
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 8080 || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    #mem_reservation: '512m'
+    #memswap_limit: '1g'
+    #mem_limit: '1g'
+    #cpuset: '1'
+    logging:
+      driver: "syslog"
+      options:
+        syslog-address: "tcp://172.17.0.1:514"
+        tag: "docker_bastion_guacamole_{{.ImageName}}_{{.Name}}"
+  postgres:
+    image: postgres:9.6
+    environment:
+      - POSTGRES_USER=guacamole
+      - POSTGRES_PASSWORD=guacamole
+    restart: always
+    volumes:
+      - ./postgresql-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U guacamole"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    #mem_reservation: '512m'
+    #memswap_limit: '1g'
+    #mem_limit: '1g'
+    #cpuset: '1'
+    logging:
+      driver: "syslog"
+      options:
+        syslog-address: "tcp://172.17.0.1:514"
+        tag: "docker_bastion_postgres_{{.ImageName}}_{{.Name}}"
+  chrome:
+    image: lprat/chrome:latest
+    restart: always
+    #mem_reservation: '512m'
+    #memswap_limit: '1g'
+    #mem_limit: '1g'
+    #cpuset: '1'
+    logging:
+      driver: "syslog"
+      options:
+        syslog-address: "tcp://172.17.0.1:514"
+        tag: "docker_bastion_chrome_{{.ImageName}}_{{.Name}}"
+  authelia:
+    image: authelia/authelia:latest
+    container_name: authelia
+    hostname: authelia
+    volumes:
+      - ./authelia:/config
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris
+    #mem_reservation: '512m'
+    #memswap_limit: '1g'
+    #mem_limit: '1g'
+    #cpuset: '1'
+    logging:
+      driver: "syslog"
+      options:
+        syslog-address: "tcp://172.17.0.1:514"
+        tag: "docker_bastion_authelia_{{.ImageName}}_{{.Name}}"
+  nginx: 
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./authelia-conf:/config/nginx/
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./cert/nginx.key:/etc/nginx/certs/cert.key
+      - ./cert/nginx.pem:/etc/nginx/certs/cert.crt
+      - ./cert/ca.pem:/etc/nginx/certs/bundle-client.pem
+      - ./cert/dhparams.pem:/etc/nginx/certs/dhparams.pem
+    restart: always
+    links:
+      - guacamole
+      - authelia
+    ports:
+      - 443:443
+    #mem_reservation: '512m'
+    #memswap_limit: '1g'
+    #mem_limit: '1g'
+    #cpuset: '1'
+    logging:
+      driver: "syslog"
+      options:
+        syslog-address: "tcp://172.17.0.1:514"
+        tag: "docker_bastion_nginx_{{.ImageName}}_{{.Name}}"
