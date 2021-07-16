@@ -63,6 +63,23 @@ Create new connexion to chrome (host: chrome / port: 5900 / protocol: VNC).
 #### Add RDP/VNC/SSH
 When you add new RDP/VNC/SSH acces and it's work fine, you must apply local firewall rule (iptables/netfilter or windows firewall) on RDP/VNC/SSH to accept only "bastion (guacamole)" address IP.  
 
+### Record session
+First run command on host to apply good autorization on directory "guac-record":
+```
+chown -R 1000.1000 guac-record
+```
+For record session use directory: "/record" in guacamole config. 
+#### Read session
+To decode video and text use command docker:
+```
+docker exec guacd /usr/local/guacamole/bin/guaclog -f /record/file-to-extract 
+#read with text editor /record/file-to-extract.txt
+```
+```
+docker exec guacd /usr/local/guacamole/bin/guacenc -f /record/file-to-extract 
+#read with vlc /record/file-to-extract.m4v
+```
+
 ## Usage Guacamole and authelia for web admin
 ### Rsyslog config
 In your rsyslog config (on your docker host):
