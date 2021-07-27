@@ -52,6 +52,10 @@ Ref: https://github.com/apache/guacamole-client/blob/master/guacamole-docker/bin
 ```shell
 docker-compose -f docker-compose_guacamole.yml up -d
 ```
+If first time to run then after "docker-compose -f docker-compose_guacamole.yml up -d", run (create db):
+```shell
+sudo bash init.sh
+```
 
 ### Connect to guacamole
 Connect to guacamole : https://bastion.your_domaine.fr/ ( username is `guacadmin` with password `guacadmin` ) and create new admin and remove guacadmin account.  
@@ -64,10 +68,6 @@ Create new connexion to chrome (host: chrome / port: 5900 / protocol: VNC).
 When you add new RDP/VNC/SSH acces and it's work fine, you must apply local firewall rule (iptables/netfilter or windows firewall) on RDP/VNC/SSH to accept only "bastion (guacamole)" address IP.  
 
 ### Record session
-First run command on host to apply good autorization on directory "guac-record":
-```
-chown -R 1000.1000 guac-record
-```
 For record session use directory: "/record" in guacamole config. 
 #### Read session
 To decode video and text use command docker:
