@@ -20,8 +20,8 @@ In your interne DNS serveur add bastion server resolution:
   - bastion.your_domaine.fr IN A X.X.X.X (X.X.X.X -> IP address bastion server)
 
 ### Certificat nginx config
-First, get repository: git clone https://github.com/lprat/docker-guacamole 
-And go to directory "cert"
+First, get repository: git clone https://github.com/lprat/docker-bastion  
+And go to directory "cert"  
     - make CA (see cert/Readme.md)
     - Make nginx.key, nginx.pem and dhparams.pem (see Readme.md) or import cert from your PKI
     - Create user certificat with script if you need for certificat client authentification (see cert/Readme.md)
