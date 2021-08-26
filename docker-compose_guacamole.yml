@@ -3,9 +3,12 @@ services:
   guacd:
     image: lprat/guacd:latest
     container_name: guacd
-    restart: always    
+    restart: always
+    environment:
+      - GUACD_LOG_LEVEL=info
     volumes:
       - ./guac-record:/record
+      - ./guac-share_rdp:/share_rdp
     healthcheck:
       test: ["CMD-SHELL", "nc -z 127.0.0.1 4822 || exit 1"]
       interval: 5s
