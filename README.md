@@ -65,8 +65,19 @@ Chrome is docker runned by docker-compose.
 Create new connexion to chrome (host: chrome / port: 5900 / protocol: VNC).  
 
 #### Add RDP/VNC/SSH
-When you add new RDP/VNC/SSH acces and it's work fine, you must apply local firewall rule (iptables/netfilter or windows firewall) on RDP/VNC/SSH to accept only "bastion (guacamole)" address IP.  
+When you add new RDP/VNC/SSH acces and it's work fine, you must apply local firewall rule (iptables/netfilter or windows firewall) on RDP/VNC/SSH to accept only "bastion (guacamole)" address IP. 
 
+##### Share SSH
+Just enable SFTP in configuration connexion.  
+
+##### Share RDP
+Create directory for server: "mkdir ($pwd)/docker-bastion/rdp_share/server_xxx"  
+In connexion RDP configuration:  
+  - In "Driver redirection" :  
+    - Enable "driver network"  
+    - Name of driver: "guacamole"  
+    - Path to driver: "/share_rdp/server_xxx/"  
+https://www.youtube.com/watch?v=TTFB2XEQQUU https://www.youtube.com/watch?v=TTFB2XEQQUU 
 ### Record session
 For record session use directory: "/record" in guacamole config. 
 You can use variable in name of file to record: http://guacamole.apache.org/doc/gug/configuring-guacamole.html#parameter-tokens  
@@ -80,6 +91,10 @@ docker exec guacd /usr/local/guacamole/bin/guaclog -f /record/file-to-extract
 docker exec guacd /usr/local/guacamole/bin/guacenc -f /record/file-to-extract 
 #read with vlc /record/file-to-extract.m4v
 ```
+
+### Video to help you
+https://www.youtube.com/watch?v=TTFB2XEQQUU  
+
 
 ## Usage Guacamole and authelia for web admin
 ### Rsyslog config
