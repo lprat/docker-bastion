@@ -7,3 +7,4 @@ docker run --rm lprat/guacamole-client /opt/guacamole/bin/initdb.sh --postgres >
 docker-compose exec postgres createdb -U guacamole guacamole_db
 docker-compose exec postgres psql -U guacamole -d guacamole_db -f /db/initdb.sql
 chown -R 1000.1000 guac-record
+chown -R 1000.1000 guac-share_rdp
