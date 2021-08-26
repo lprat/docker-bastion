@@ -69,6 +69,7 @@ When you add new RDP/VNC/SSH acces and it's work fine, you must apply local fire
 
 ### Record session
 For record session use directory: "/record" in guacamole config. 
+You can use variable in name of file to record: http://guacamole.apache.org/doc/gug/configuring-guacamole.html#parameter-tokens  
 #### Read session
 To decode video and text use command docker:
 ```
