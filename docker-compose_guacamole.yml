@@ -6,6 +6,7 @@ services:
     restart: always
     environment:
       - GUACD_LOG_LEVEL=info
+      - TZ=Europe/Paris
     volumes:
       - ./guac-record:/record
       - ./guac-share_rdp:/share_rdp
