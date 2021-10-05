@@ -50,6 +50,8 @@ Ref: https://github.com/apache/guacamole-client/blob/master/guacamole-docker/bin
 
 ### Run docker-compose
 ```shell
+ln -s config.env .env
+#edit config.env if youd need
 docker-compose -f docker-compose_guacamole.yml up -d
 ```
 If first time to run then after "docker-compose -f docker-compose_guacamole.yml up -d", run (create db):
