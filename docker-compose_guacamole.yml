@@ -5,11 +5,11 @@ services:
     container_name: guacd
     restart: always
     environment:
-      - GUACD_LOG_LEVEL=info
-      - TZ=Europe/Paris
+      - GUACD_LOG_LEVEL=${GUACD_LOG_LEVEL}
+      - TZ=${TZ}
     volumes:
-      - ./guac-record:/record
-      - ./guac-share_rdp:/share_rdp
+      - ${LOCAL_PATH_RECORD}:/record
+      - ${LOCAL_PATH_RDP}:/share_rdp
     healthcheck:
       test: ["CMD-SHELL", "nc -z 127.0.0.1 4822 || exit 1"]
       interval: 5s
@@ -22,7 +22,7 @@ services:
     logging:
       driver: "syslog"
       options:
-        syslog-address: "tcp://172.17.0.1:514"
+        syslog-address: "tcp://${SYSLOG_IP_SERVER}:514"
         tag: "docker_bastion_guacd_{{.ImageName}}_{{.Name}}"
   guacamole:
     image: lprat/guacamole-client:latest
@@ -33,11 +33,9 @@ services:
       - POSTGRES_PASSWORD=guacamole
       - POSTGRES_HOSTNAME=postgres
       - POSTGRES_DATABASE=guacamole_db
-      - TOTP_ISSUER="bastion guac"
+      - TOTP_ISSUER=${TOTP_ISSUER}
       - TOTP_ENABLED=true
       - GUACD_HOSTNAME=guacd
-    ports:
-      - 8080:8080
     links:
       - guacd
       - postgres
@@ -60,7 +58,7 @@ services:
     logging:
       driver: "syslog"
       options:
-        syslog-address: "tcp://172.17.0.1:514"
+        syslog-address: "tcp://${SYSLOG_IP_SERVER}:514"
         tag: "docker_bastion_guacamole_{{.ImageName}}_{{.Name}}"
   postgres:
     image: postgres:9.6
@@ -69,7 +67,7 @@ services:
       - POSTGRES_PASSWORD=guacamole
     restart: always
     volumes:
-      - ./postgresql-data:/var/lib/postgresql/data
+      - ${LOCAL_PATH_PGSQL}:/var/lib/postgresql/data
       - ./db:/db
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U guacamole"]
@@ -83,7 +81,7 @@ services:
     logging:
       driver: "syslog"
       options:
-        syslog-address: "tcp://172.17.0.1:514"
+        syslog-address: "tcp://${SYSLOG_IP_SERVER}:514"
         tag: "docker_bastion_postgres_{{.ImageName}}_{{.Name}}"
   chrome:
     image: lprat/chrome:latest
@@ -95,28 +93,28 @@ services:
     logging:
       driver: "syslog"
       options:
-        syslog-address: "tcp://172.17.0.1:514"
+        syslog-address: "tcp://${SYSLOG_IP_SERVER}:514"
         tag: "docker_bastion_chrome_{{.ImageName}}_{{.Name}}"
   nginx: 
     image: nginx:latest
     container_name: nginx
     volumes:
-      - ./nginx_guac.conf:/etc/nginx/nginx.conf
-      - ./cert/nginx.key:/etc/nginx/certs/cert.key
-      - ./cert/nginx.pem:/etc/nginx/certs/cert.crt
-      - ./cert/ca.pem:/etc/nginx/certs/bundle-client.pem
-      - ./cert/dhparams.pem:/etc/nginx/certs/dhparams.pem
+      - ${LOCAL_PATH_NGINX_CONF}:/etc/nginx/nginx.conf
+      - ${LOCAL_PATH_CERT_NGINX}nginx.key:/etc/nginx/certs/cert.key
+      - ${LOCAL_PATH_CERT_NGINX}nginx.pem:/etc/nginx/certs/cert.crt
+      - ${LOCAL_PATH_CERT_NGINX}ca.pem:/etc/nginx/certs/bundle-client.pem
+      - ${LOCAL_PATH_CERT_NGINX}dhparams.pem:/etc/nginx/certs/dhparams.pem
     restart: always
     links:
       - guacamole
     ports:
-      - 443:443
+      - ${IP_BIND}443:443
     #mem_reservation: '512m'
     #memswap_limit: '1g'
-    #mem_limit: '1g'
+    #mem_limit: '1g'GUACD_LOG_LEVEL
     #cpuset: '1'
     logging:
       driver: "syslog"
       options:
-        syslog-address: "tcp://172.17.0.1:514"
+        syslog-address: "tcp://${SYSLOG_IP_SERVER}:514"
         tag: "docker_bastion_nginx_{{.ImageName}}_{{.Name}}"
