@@ -57,6 +57,7 @@ docker-compose -f docker-compose_guacamole.yml up -d
 If first time to run then after "docker-compose -f docker-compose_guacamole.yml up -d", run (create db):
 ```shell
 sudo bash init.sh
+docker-compose -f docker-compose_guacamole.yml restart guacamole
 ```
 
 ### Connect to guacamole
