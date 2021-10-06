@@ -69,6 +69,8 @@ Create new connexion to chrome (host: chrome / port: 5900 / protocol: VNC).
 #### Add RDP/VNC/SSH
 When you add new RDP/VNC/SSH acces and it's work fine, you must apply local firewall rule (iptables/netfilter or windows firewall) on RDP/VNC/SSH to accept only "bastion (guacamole)" address IP. 
 
+On ssh key use format: "ssh-keygen -t rsa -b 4096 -m PEM".  
+
 ##### Share SSH
 Just enable SFTP in configuration connexion.  
 
