@@ -38,6 +38,7 @@ services:
       - TOTP_ISSUER=${TOTP_ISSUER}
       - TOTP_ENABLED=true
       - GUACD_HOSTNAME=guacd
+      - API_SESSION_TIMEOUT=${API_SESSION_TIMEOUT}
     links:
       - guacd
       - postgres
