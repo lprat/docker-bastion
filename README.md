@@ -73,6 +73,12 @@ When you add new RDP/VNC/SSH acces and it's work fine, you must apply local fire
 On ssh key privat use format: "ssh-keygen -t rsa -b 4096 -m PEM".  
 On ssh "host-key" user command "ssh-keyscan IP" to get id_rsa key and paste line (ssh-keyscanin format "IP algo base64") in field.  
 
+Config sshd_config on remote host to limit connexion:
+  - AllowUsers USER_BASTION@IP_ADDRESS_BASTION
+  - PasswordAuthentication no
+  - ChallengeResponseAuthentication no
+  - PubkeyAuthentication yes
+
 ##### Share SSH
 Just enable SFTP in configuration connexion.  
 
