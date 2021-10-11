@@ -112,6 +112,11 @@ services:
       - guacamole
     ports:
       - ${IP_BIND}443:443
+    healthcheck:
+      test: ["CMD", "service", "nginx", "status"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     #mem_reservation: '512m'
     #memswap_limit: '1g'
     #mem_limit: '1g'GUACD_LOG_LEVEL
