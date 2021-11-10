@@ -8,7 +8,7 @@ services:
       - ./guac-record:/record
     healthcheck:
       test: ["CMD-SHELL", "nc -z 127.0.0.1 4822 || exit 1"]
-      interval: 5s
+      interval: 30s
       timeout: 5s
       retries: 5
     #mem_reservation: '512m'
@@ -46,7 +46,7 @@ services:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "nc -z 127.0.0.1 8080 || exit 1"]
-      interval: 5s
+      interval: 30s
       timeout: 5s
       retries: 5
     #mem_reservation: '512m'
@@ -68,7 +68,7 @@ services:
       - ./postgresql-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U guacamole"]
-      interval: 5s
+      interval: 30s
       timeout: 5s
       retries: 5
     #mem_reservation: '512m'
