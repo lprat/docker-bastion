@@ -28,8 +28,8 @@ services:
     image: lprat/guacamole-client:latest
     container_name: guacamole
     restart: always
-    volumes:
-      - ${LOCAL_PATH_SERVER_XML}:${GUEST_PATH_SERVER_XML}
+#    volumes:
+#      - ${LOCAL_PATH_SERVER_XML}:${GUEST_PATH_SERVER_XML}
     environment:
       - POSTGRES_USER=guacamole
       - POSTGRES_PASSWORD=guacamole
