@@ -1,9 +1,9 @@
-FROM debian:buster-slim AS builder
-ARG GUAC_VER=1.3.0
+FROM debian:bullseye-slim AS builder
+ARG GUAC_VER=1.4.0
 ARG PREFIX_DIR=/usr/local/guacamole
 ARG DEBIAN_FRONTEND=noninteractive
 #Add backports
-ARG DEBIAN_RELEASE=buster-backports
+ARG DEBIAN_RELEASE=bullseye-backports
 RUN grep " ${DEBIAN_RELEASE} " /etc/apt/sources.list || echo >> /etc/apt/sources.list \
     "deb http://deb.debian.org/debian ${DEBIAN_RELEASE} main contrib non-free"
 
@@ -38,8 +38,8 @@ RUN ${PREFIX_DIR}/bin/list-dependencies.sh     \
         ${PREFIX_DIR}/lib/freerdp2/*guac*.so   \
         > ${PREFIX_DIR}/DEPENDENCIES
 
-FROM debian:buster-slim
-ARG DEBIAN_RELEASE=buster-backports
+FROM debian:bullseye-slim
+ARG DEBIAN_RELEASE=bullseye-backports
 RUN grep " ${DEBIAN_RELEASE} " /etc/apt/sources.list || echo >> /etc/apt/sources.list \
     "deb http://deb.debian.org/debian ${DEBIAN_RELEASE} main contrib non-free"
 ARG PREFIX_DIR=/usr/local/guacamole
