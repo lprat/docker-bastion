@@ -19,6 +19,9 @@ services:
     #memswap_limit: '1g'
     #mem_limit: '1g'
     #cpuset: '1'
+    networks:
+      - frontend
+      - backend
     logging:
       driver: "syslog"
       options:
@@ -58,6 +61,8 @@ services:
     #memswap_limit: '1g'
     #mem_limit: '1g'
     #cpuset: '1'
+    networks:
+      - backend
     logging:
       driver: "syslog"
       options:
@@ -81,6 +86,8 @@ services:
     #memswap_limit: '1g'
     #mem_limit: '1g'
     #cpuset: '1'
+    networks:
+      - backend
     logging:
       driver: "syslog"
       options:
@@ -93,6 +100,9 @@ services:
     #memswap_limit: '1g'
     #mem_limit: '1g'
     #cpuset: '1'
+    networks:
+      - frontend
+      - backend
     logging:
       driver: "syslog"
       options:
@@ -121,8 +131,17 @@ services:
     #memswap_limit: '1g'
     #mem_limit: '1g'GUACD_LOG_LEVEL
     #cpuset: '1'
+    networks:
+      - frontend
+      - backend
     logging:
       driver: "syslog"
       options:
         syslog-address: "tcp://${SYSLOG_IP_SERVER}:514"
         tag: "docker_bastion_nginx_{{.ImageName}}_{{.Name}}"
+
+networks:
+  frontend:
+    internal: false
+  backend:
+    internal: true
