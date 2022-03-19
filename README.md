@@ -104,6 +104,10 @@ docker exec guacd /usr/local/guacamole/bin/guacenc -f /record/file-to-extract
 #read with vlc /record/file-to-extract.m4v
 ```
 
+#### Copy/past on nano
+You can to meet probkem when you copy/past with nano.  
+You could put "bind ^J enter main " in /etc/nanorc to fix this problem.
+
 ### Video to help you
 https://www.youtube.com/watch?v=TTFB2XEQQUU  
 
