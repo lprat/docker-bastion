@@ -104,6 +104,12 @@ docker exec guacd /usr/local/guacamole/bin/guacenc -f /record/file-to-extract
 #read with vlc /record/file-to-extract.m4v
 ```
 
+### Troubleshooting
+#### RDP and user in group "users protected"
+FreeRDP have issue to logon with user in group "users protected".  
+This problem is not yet fixed.  
+See issue: https://github.com/lprat/docker-bastion/issues/1
+
 #### Copy/past on nano
 You can to meet probkem when you copy/past with nano.  
 You could put "bind ^J enter main " in /etc/nanorc to fix this problem.
