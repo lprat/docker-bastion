@@ -5,7 +5,7 @@ This docker BASTION is based on projet: https://guacamole.apache.org/, Authelia,
 ## Security
 ### Client admin to Bastion
 For secure connexion to bastion, you must respect 2 things:
- - Use dedicated computer for administrator (with attacking surface restricted: not managed by Active Directory, no office tools, internet limited, dont execute unknown binary/script...) -- prevent session hijack/prevent cookie theft; prevent certiticate theft; ...
+ - Use dedicated computer for administrator (with attacking surface restricted: not managed by Active Directory, no office tools, internet limited, dont execute unknown binary/script, local firewall activated deny all input,...) -- prevent session hijack/prevent cookie theft; prevent certiticate theft; ...
  - Use secure connexion to bastion to prevent the man-in-middle from stealing secrets (password and/or TOTP replay during the validity period). To do this, you can use authentification on FIDO or add certificat verification by your own CA (dont use PKI Active Directory).
 
 ### SSH connexion
