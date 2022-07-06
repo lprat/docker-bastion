@@ -2,6 +2,37 @@
 
 This docker BASTION is based on projet: https://guacamole.apache.org/, Authelia, nginx, https://github.com/siomiz/chrome.  
 
+## Security
+### Client admin to Bastion
+For secure connexion to bastion, you must respect 2 things:
+ - Use dedicated computer for administrator (with attacking surface restricted: not managed by Active Directory, no office tools, internet limited, dont execute unknown binary/script...) -- prevent session hijack/prevent cookie theft; prevent certiticate theft; ...
+ - Use secure connexion to bastion to prevent the man-in-middle from stealing secrets (password and/or TOTP replay during the validity period). To do this, you can use authentification on FIDO or add certificat verification by your own CA (dont use PKI Active Directory).
+
+### SSH connexion
+For secure connexion between bastion to SSH server, you must respect 3 things:
+  - On bastion configuration ssh, only use certificate authentification (no password)
+  - Force ssh server to accept only certificate authentification from bastion server ("AllowUsers user@bastion")
+  - Prefer to use ssh access with an unprivileged account (simple user), and the user can use "sudo" to gain privileges if allowed.
+ 
+### RDP connexion
+For secure connexion between bastion to RDP server, you must respect 3 things:
+  - On bastion configuration RDP, only use TLS connexion with a local account (dont use a domain AD account to connect). Raison: if you are using an AD account, the NTLM (or NTLMv2 if you use NLA) can be stolen by an attacker to spread to other servers accepting this account.
+  - On RDP serveur 
+     - you use uniq and strong local password for the account rdp 
+     - Prefer to use rdp access with an unprivileged account (simple user), and the user can use "runAs" to gain local privileges if allowed.
+     - you add one rule to filter the specific local account rdp only from bastion IP (use local firewall windows)
+     - limit (only from solution addressed on the last point) or disable usage of remote access from wmi/winrm (like powershell)/admin share (like psexec)
+  - On RDP server dont use privileged account to "runAs" because secrets can be stolen by an attacker to spread to other servers accepting this account. If you need an AD account, prefer to use windows policy authentification to accept account authentification (in user protected group) from authorized computer in AD to use this account (Remember to use dedicated computer for administrator different from the computer used on the bastion, because the bastion client is not managed by AD. Prevent password/ntlm theft; session hijack; ...). This method uses kerberos authentification to connect to the rdp server, no secret is given to the rdp server, only the TGS ticket (specific to this server).
+  
+### Web connexion
+Solution Chrome in guacamole is not best choice for security. Prefer use authelia (+ nginx) and respect 3 things:
+  - Use dedicated computer for administrator (with attacking surface restricted: not managed by Active Directory, no office tools, internet limited, dont execute unknown binary/script...) -- prevent session hijack/prevent cookie theft; prevent certiticate theft; ...
+ - Use secure connexion to authelia to prevent the man-in-middle from stealing secrets (password and/or TOTP replay during the validity period). To do this, you can use authentification on FIDO or add certificat verification by your own CA (dont use PKI Active Directory).
+ - Use secure connexion between authelia and final web server:
+   - First choice (the best): prefer use certificat TLS authentification if possible. Optional, add local filter (local firewall) on target server to accept only connexion from bastion (a deep protection).
+   - Second choice: use secret TOKEN between authelia and final web server, then use cyphered connexion (TLS) with certificat server verification by CA. Optional, add local filter (local firewall) on target server to accept only connexion from bastion (a deep protection).
+   - Last solution (the worst): use cyphered connexion (TLS) with certificat server verification by CA and add local filter (local firewall) on target server to accept only connexion from bastion (you can add this filter with first solution to use a deep protection). In last case, the address IP from bastion must not be spoofed or stolen.
+
 ## Features
   - Guacamole with TOTP (google authentificator) allows access to RDP, VNC, SSH. 
   - Authelia allows access to all web admin portal 
