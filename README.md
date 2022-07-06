@@ -5,7 +5,7 @@ This docker BASTION is based on projet: https://guacamole.apache.org/, Authelia,
 ## Security
 ### Client admin to Bastion
 For secure connexion to bastion, you must respect 2 things:
- - Use dedicated computer for administrator (with attacking surface restricted: not managed by Active Directory, no office tools, internet limited, dont execute unknown binary/script, local firewall activated deny all input,...) -- prevent session hijack/prevent cookie theft; prevent certiticate theft; ...
+ - Use dedicated computer for administrator (with attacking surface restricted: not managed by Active Directory, no office tools, internet limited, dont execute unknown binary/script, local firewall activated deny all input,...) -- prevent session hijack/prevent cookie theft; prevent secrets/certiticate theft; ...
  - Use secure connexion to bastion to prevent the man-in-middle from stealing secrets (password and/or TOTP replay during the validity period). To do this, you can use authentification on FIDO or add certificat verification by your own CA (dont use PKI Active Directory).
 
 ### SSH connexion
@@ -26,7 +26,7 @@ For secure connexion between bastion to RDP server, you must respect 3 things:
   
 ### Web connexion
 Solution Chrome in guacamole is not best choice for security. Prefer use authelia (+ nginx) and respect 3 things:
-  - Use dedicated computer for administrator (with attacking surface restricted: not managed by Active Directory, no office tools, internet limited, dont execute unknown binary/script, local firewall activated deny all input,...) -- prevent session hijack/prevent cookie theft; prevent certiticate theft; ...
+  - Use dedicated computer for administrator (with attacking surface restricted: not managed by Active Directory, no office tools, internet limited, dont execute unknown binary/script, local firewall activated deny all input,...) -- prevent session hijack/prevent cookie theft; prevent secrets/certiticate theft; ...
  - Use secure connexion to authelia to prevent the man-in-middle from stealing secrets (password and/or TOTP replay during the validity period). To do this, you can use authentification on FIDO or add certificat verification by your own CA (dont use PKI Active Directory).
  - Use secure connexion between authelia and final web server:
    - First choice (the best): prefer use certificat TLS authentification if possible. Optional, add local filter (local firewall) on target server to accept only connexion from bastion (a deep protection).
