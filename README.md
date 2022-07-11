@@ -16,13 +16,13 @@ For secure connexion between bastion to SSH server, you must respect 3 things:
  
 ### RDP connexion
 For secure connexion between bastion to RDP server, you must respect 3 things:
-  - On bastion configuration RDP, only use TLS connexion with a local account (dont use a domain AD account to connect). Raison: if you are using an AD account, the NTLM (or NTLMv2 if you use NLA) can be stolen by an attacker to spread to other servers accepting this account.
+  - On bastion configuration RDP, only use TLS connexion with a local account (dont use a domain AD account to connect). Raison: if you are using an AD account can be stolen by an attacker to spread to other servers accepting this account (logon type 10 ou 3+2 with NLA).
   - On RDP serveur 
      - you use uniq and strong local password for the account rdp 
      - Prefer to use rdp access with an unprivileged account (simple user), and the user can use "runAs" to gain local privileges if allowed.
      - you add one rule to filter the specific local account rdp only from bastion IP (use local firewall windows)
      - limit (only from solution addressed on the last point) or disable usage of remote access from wmi/winrm (like powershell)/admin share (like psexec)
-  - On RDP server dont use privileged account to "runAs" because secrets can be stolen by an attacker to spread to other servers accepting this account. If you need an AD account, prefer to use windows policy authentification to accept account authentification (in user protected group) from authorized computer in AD to use this account (Remember to use dedicated computer for administrator different from the computer used on the bastion, because the bastion client is not managed by AD. Prevent password/ntlm theft; session hijack; ...). This method uses kerberos authentification to connect to the rdp server, no secret is given to the rdp server, only the TGS ticket (specific to this server).
+  - On RDP server dont use privileged account to "runAs" because secrets can be stolen by an attacker to spread to other servers accepting this account. If you need an AD account, prefer to use windows policy authentification to accept account authentification (in user protected group) from authorized computer in AD to use this account (Remember to use dedicated computer for administrator different from the computer used on the bastion, because the bastion client is not managed by AD. Prevent password/ntlm theft; session hijack; ...) and use [RCG](https://docs.microsoft.com/fr-fr/windows/security/identity-protection/remote-credential-guard) to prevent stolen secrets after deconnexion (Attention: attacker can to steal secret during your connexion).
   
 ### Web connexion
 Solution Chrome in guacamole is not best choice for security. Prefer use authelia (+ nginx) and respect 3 things:
