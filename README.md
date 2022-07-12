@@ -13,6 +13,7 @@ For secure connexion between bastion to SSH server, you must respect 3 things:
   - On bastion configuration ssh, only use certificate authentification (no password)
   - Force ssh server to accept only certificate authentification from bastion server ("AllowUsers user@bastion")
   - Prefer to use ssh access with an unprivileged account (simple user), and the user can use "sudo" to gain privileges if allowed.
+  - Use [NIST](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar1.pdf) or [ANSSI](https://www.ssi.gouv.fr/uploads/2021/03/anssi-guide-selection_crypto-1.0.pdf) recommandations for cryptographic algorithms and key length.
  
 ### RDP connexion
 For secure connexion between bastion to RDP server, you must respect 3 things:
@@ -28,6 +29,7 @@ For secure connexion between bastion to RDP server, you must respect 3 things:
 Solution Chrome in guacamole is not best choice for security. Prefer use authelia (+ nginx) and respect 3 things:
   - Use dedicated computer for administrator (with attacking surface restricted: not managed by Active Directory, no office tools, internet limited, dont execute unknown binary/script, local firewall activated deny all input,...) -- prevent session hijack/prevent cookie theft; prevent secrets/certiticate theft; ...
  - Use secure connexion to authelia to prevent the man-in-middle from stealing secrets (password and/or TOTP replay during the validity period). To do this, you can use authentification on FIDO or add certificat verification by your own CA (dont use PKI Active Directory).
+ - Use [NIST](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar1.pdf) or [ANSSI](https://www.ssi.gouv.fr/uploads/2021/03/anssi-guide-selection_crypto-1.0.pdf) recommandations for cryptographic algorithms and key length.
  - Use secure connexion between authelia and final web server:
    - First choice (the best): prefer use certificat TLS authentification if possible. Optional, add local filter (local firewall) on target server to accept only connexion from bastion (a deep protection).
    - Second choice: use secret TOKEN between authelia and final web server, then use cyphered connexion (TLS) with certificat server verification by CA. Optional, add local filter (local firewall) on target server to accept only connexion from bastion (a deep protection).
